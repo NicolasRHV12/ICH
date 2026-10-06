@@ -2391,16 +2391,257 @@
     </div>
 </section><!-- /twig-include:sections/index.experiences.html -->
         <!-- twig-include:sections/index.simulation.html --><!-- Explain: Placeholder section for future interactive simulation feature. -->
+<style>
+#simulation .sim{--sa:var(--accent-color,#d9a566);--st:var(--text-color,#f5efe6);--sm:var(--text-muted,#a89f94);--ss:var(--surface-color,#17120f);--sb:var(--glass-border,rgba(255,255,255,.16));--sp:var(--primary-color,#5f8a54);max-width:960px;margin:28px auto 0;color:var(--st);text-align:left;position:relative}
+#simulation .sim *{box-sizing:border-box}
+.sim-glasses{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.sim-chip{flex:0 0 auto;padding:10px 14px;border-radius:999px;border:1px solid var(--sb);background:var(--ss);color:var(--st);font:600 13px system-ui;cursor:pointer}
+.sim-chip.on{background:var(--sp);color:#fff;border-color:transparent}
+.sim-main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:10px;margin-top:10px;height:470px}
+.sim-stage{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--sb);background:radial-gradient(ellipse at 50% 28%,#3b2a1f 0%,#15100c 58%,#070606 100%);touch-action:pan-y}
+.sim-stage canvas{width:100%;height:100%;display:block;cursor:grab}
+.sim-tag,.sim-hint{position:absolute;left:50%;transform:translateX(-50%);font:600 11px system-ui;color:#fff;background:rgba(0,0,0,.5);padding:6px 11px;border-radius:99px;pointer-events:none;white-space:nowrap}
+.sim-tag{top:10px}.sim-hint{bottom:10px;opacity:.8}
+.sim-panel{overflow-y:auto;border:1px solid var(--sb);border-radius:22px;background:var(--ss);padding:8px 10px 10px}
+.sim-panel h4{margin:10px 4px 6px;font:700 11px system-ui;color:var(--sm)}
+.sim-row{padding:9px;border-radius:14px;border:1px solid var(--sb);margin-bottom:6px}
+.sim-row.has{border-color:var(--sa)}
+.sim-row b{display:flex;align-items:center;gap:7px;font:600 13px system-ui}
+.sim-dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.2)}
+.sim-step{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+.sim-step small{color:var(--sm);font:12px system-ui}
+.sim-step span{display:flex;align-items:center;gap:7px}
+.sim-step button{width:34px;height:34px;border-radius:50%;border:1px solid var(--sb);background:transparent;color:var(--st);font:20px/1 system-ui;cursor:pointer}
+.sim-step button.p{background:var(--sp);color:#fff;border:0}
+.sim-step em{min-width:14px;text-align:center;font:600 14px system-ui}
+.sim-bar{margin-top:10px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 16px;border:1px solid var(--sb);border-radius:22px;background:var(--ss)}
+.sim-bar small{display:block;max-width:420px;color:var(--sm);font:12px/1.4 system-ui}
+.sim-price{font:700 24px var(--font-heading,Georgia,serif)}
+.sim-acts{display:flex;gap:8px;flex-wrap:wrap}
+.sim-btn{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--sb);background:transparent;color:var(--st);font:600 13px system-ui;cursor:pointer}
+.sim-btn.main{background:var(--sp);color:#fff;border:0}
+.sim-favs{display:flex;gap:10px;overflow-x:auto;margin-top:10px;padding-bottom:4px}
+.sim-fav{flex:0 0 170px;display:flex;gap:8px;align-items:center;padding:8px;border:1px solid var(--sb);border-radius:16px;background:var(--ss);cursor:pointer;position:relative}
+.sim-fav img{width:46px;height:46px;border-radius:10px;object-fit:cover;background:#17110d}
+.sim-fav b{display:block;font:600 12px/1.25 system-ui}.sim-fav small{color:var(--sm);font:11px system-ui}
+.sim-fav i{position:absolute;top:2px;right:6px;font-style:normal;color:var(--sm);padding:4px}
+.sim-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#111;color:#fff;border:1px solid var(--sa);padding:11px 18px;border-radius:99px;font:600 13px system-ui;z-index:99999;opacity:0;pointer-events:none;transition:opacity .25s}
+.sim-toast.on{opacity:1}
+@media(min-width:768px){.sim-main{grid-template-columns:1fr 340px;height:580px}}
+</style>
+
 <section id="simulation" class="section-pad border-y border-[var(--border-color)] bg-[var(--background-color)] px-5 sm:px-8">
-    <div class="mx-auto max-w-4xl text-center">
-        <p class="section-kicker justify-center">Simulación</p>
-        <h2 class="mt-4 text-3xl font-semibold leading-tight tracking-[-0.03em] sm:text-5xl" style="font-family: var(--font-heading);">Simulación de Creación</h2>
-        <div class="mt-10 flex min-h-[40vh] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-[var(--glass-border)] bg-[var(--surface-color)]/30 p-12 backdrop-blur-sm">
-            <i class="fa-solid fa-flask mb-4 text-4xl text-[var(--text-muted)]"></i>
-            <p class="text-lg text-[var(--text-muted)]">Este espacio está reservado para la futura simulación interactiva.</p>
-        </div>
-    </div>
-</section><!-- /twig-include:sections/index.simulation.html -->
+<div class="mx-auto max-w-4xl text-center">
+<p class="section-kicker justify-center">Simulación</p>
+<h2 class="mt-4 text-3xl font-semibold leading-tight tracking-[-0.03em] sm:text-5xl" style="font-family: var(--font-heading);">Simulación de Creación</h2>
+<p class="mx-auto mt-4 max-w-xl text-base leading-7 text-[var(--text-muted)]">Elige tu vaso, llénalo con tus ingredientes, gíralo en 3D y pídelo.</p>
+</div>
+<div class="sim">
+<div class="sim-glasses" id="simGlasses"></div>
+<div class="sim-main">
+<div class="sim-stage" id="simStage"><canvas id="simCanvas"></canvas><div class="sim-tag" id="simTag"></div><div class="sim-hint">↔ Arrastra para girar</div></div>
+<aside class="sim-panel" id="simPanel"></aside>
+</div>
+<div class="sim-bar">
+<div><small id="simSpec"></small><div class="sim-price" id="simPrice"></div></div>
+<div class="sim-acts">
+<button class="sim-btn" id="simFav" type="button"></button>
+<button class="sim-btn" id="simClear" type="button">Vaciar</button>
+<button class="sim-btn main" id="simAdd" type="button">Agregar al pedido</button>
+</div>
+</div>
+<div class="sim-favs" id="simFavs"></div>
+<div class="sim-toast" id="simToast" role="status"></div>
+</div>
+</section>
+
+<script>
+(() => {
+  const ML = 30, CART = 'popsCocktailsCart', FAV = 'popsCocktailsFavorites';
+  const ING = [
+    { id: 'gin', n: 'Gin', p: 9000, col: '#dcecee', op: .4, g: 'Destilados · 30 ml' },
+    { id: 'whisky', n: 'Whisky', p: 11000, col: '#d4872c', op: .8 },
+    { id: 'ron', n: 'Ron', p: 8000, col: '#a8601f', op: .8 },
+    { id: 'tequila', n: 'Tequila', p: 9000, col: '#ecd890', op: .55 },
+    { id: 'tamarindo', n: 'Tamarindo Fizz', p: 5000, col: '#6b2f1a', op: .9, g: 'Sin alcohol · 30 ml' },
+    { id: 'garden', n: 'Garden Zero', p: 4500, col: '#86c96a', op: .8 },
+    { id: 'falsa', n: 'Falsa Margarita', p: 5500, col: '#e6ee9a', op: .7 }
+  ];
+  const GL = {
+    margarita: { n: 'Copa Margarita', e: '🍹', p: 8000, cap: 300, top: 2.2,
+      o: [[0,0],[.5,0],[.6,.02],[.62,.06],[.3,.1],[.09,.2],[.06,.5],[.06,1.05],[.14,1.14],[.3,1.22],[.4,1.33],[.4,1.45],[.34,1.56],[.38,1.62],[.58,1.72],[.88,1.92],[1.12,2.17],[1.2,2.35]],
+      c: [[0,1.22],[.2,1.26],[.34,1.34],[.35,1.45],[.29,1.55],[.31,1.6],[.5,1.7],[.8,1.89],[1.05,2.14],[1.15,2.35]] },
+    old: { n: 'Old Fashioned', e: '🥃', p: 6000, cap: 240, top: 1.18,
+      o: [[0,0],[.5,0],[.6,.02],[.62,.06],[.72,1.3]],
+      c: [[0,.24],[.53,.24],[.575,.26],[.595,.3],[.675,1.3]] },
+    alto: { n: 'Vaso Alto', e: '🥤', p: 5000, cap: 330, top: 2.3,
+      o: [[0,0],[.44,0],[.5,.02],[.515,.06],[.58,2.5]],
+      c: [[0,.16],[.44,.16],[.48,.18],[.49,.22],[.535,2.5]] },
+    martini: { n: 'Copa Martini', e: '🍸', p: 7000, cap: 180, top: 2.2,
+      o: [[0,0],[.45,0],[.52,.02],[.53,.05],[.25,.09],[.07,.18],[.05,.5],[.05,1.2],[.1,1.3],[.22,1.4],[.55,1.72],[.95,2.2],[1.05,2.35]],
+      c: [[0,1.36],[.12,1.4],[.5,1.76],[.9,2.22],[1,2.35]] },
+    vino: { n: 'Copa de Vino Tinto', e: '🍷', p: 7000, cap: 300, top: 2.35,
+      o: [[0,0],[.5,0],[.56,.02],[.56,.05],[.25,.1],[.06,.2],[.05,.5],[.05,1.15],[.09,1.2],[.22,1.28],[.46,1.42],[.66,1.62],[.79,1.95],[.8,2.3],[.72,2.65],[.63,2.9]],
+      c: [[0,1.3],[.18,1.34],[.43,1.45],[.62,1.64],[.745,1.95],[.755,2.3],[.675,2.65],[.585,2.9]] }
+  };
+  const $ = id => document.getElementById(id);
+  const money = n => '$' + Math.round(n).toLocaleString('es-CO');
+  const read = k => { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) { return []; } };
+  const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  let gk = 'margarita', G = GL[gk], L = [], favs = read(FAV), img = '';
+
+  $('simGlasses').innerHTML = Object.keys(GL).map(k => `<button type="button" class="sim-chip" data-g="${k}">${GL[k].e} ${GL[k].n}</button>`).join('');
+  $('simPanel').innerHTML = ING.map(i => (i.g ? `<h4>${i.g}</h4>` : '') +
+    `<div class="sim-row" data-id="${i.id}"><b><i class="sim-dot" style="background:${i.col}"></i>${i.n}</b><div class="sim-step"><small>${money(i.p)}</small><span><button type="button" data-d="-1" aria-label="Quitar ${i.n}">−</button><em>0</em><button type="button" class="p" data-d="1" aria-label="Agregar ${i.n}">+</button></span></div></div>`).join('');
+  const total = () => L.reduce((s, l) => s + l.t, 0);
+  const qty = id => Math.round((L.find(l => l.id === id) || { t: 0 }).t / ML);
+  const counts = () => Object.fromEntries(ING.filter(i => qty(i.id)).map(i => [i.id, qty(i.id)]));
+  const price = (gKey, q) => GL[gKey].p + ING.reduce((s, i) => s + (q[i.id] || 0) * i.p, 0);
+  const titleOf = q => ING.filter(i => q[i.id]).sort((a, b) => q[b.id] - q[a.id]).map(i => i.n).join(' + ') || 'Mi creación';
+  const specOf = (gKey, q) => `Mi creación – ${GL[gKey].n}: ` + (ING.filter(i => q[i.id]).map(i => `${i.n} ${q[i.id] * ML} ml`).join(', ') || 'vacío');
+  const keyOf = (gKey, q) => gKey + '|' + ING.filter(i => q[i.id]).map(i => i.id + q[i.id]).join(',');
+  const hash = s => { let h = 5381; for (const c of s) h = ((h << 5) + h + c.charCodeAt(0)) >>> 0; return h.toString(36); };
+  let tt;
+  function toast(m) { const t = $('simToast'); t.textContent = m; t.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('on'), 2200); }
+  function ui() {
+    const q = counts(), ml = total();
+    document.querySelectorAll('.sim-chip').forEach(b => b.classList.toggle('on', b.dataset.g === gk));
+    document.querySelectorAll('.sim-row').forEach(r => { const n = qty(r.dataset.id); r.querySelector('em').textContent = n; r.classList.toggle('has', n > 0); });
+    $('simTag').textContent = `${G.n} · ${ml} / ${G.cap} ml`;
+    $('simPrice').textContent = money(price(gk, q));
+    $('simSpec').textContent = ml ? specOf(gk, q).replace('Mi creación – ', '') : 'Toca + en un ingrediente para llenar el vaso.';
+    $('simFav').textContent = favs.some(f => f.k === keyOf(gk, q)) && ml ? '♥ Favorita' : '♡ Favorita';
+    $('simFavs').innerHTML = favs.map((f, i) => `<div class="sim-fav" data-i="${i}"><img alt="" src="${f.img}"><div><b></b><small>${GL[f.g].n} · ${money(f.price)}</small></div><i data-x="${i}" aria-label="Quitar favorita">✕</i></div>`).join('');
+    document.querySelectorAll('.sim-fav b').forEach((b, i) => b.textContent = favs[i].title);
+  }
+  function add(id, d) {
+    if (d > 0 && total() + ML > G.cap) return toast('El vaso está lleno');
+    let l = L.find(x => x.id === id);
+    if (!l) { if (d < 0) return; L.push(l = { id, t: 0, c: 0 }); }
+    l.t = Math.max(0, l.t + d * ML); ui();
+  }
+  $('simPanel').onclick = e => { const b = e.target.closest('button[data-d]'); if (b) add(b.closest('.sim-row').dataset.id, +b.dataset.d); };
+  $('simGlasses').onclick = e => { const b = e.target.closest('[data-g]'); if (b) setGlass(b.dataset.g); };
+  $('simClear').onclick = () => { L.forEach(l => l.t = 0); ui(); };
+  function current() { const q = counts(); return { k: keyOf(gk, q), g: gk, q, title: titleOf(q), price: price(gk, q) }; }
+  $('simFav').onclick = () => {
+    if (!total()) return toast('Agrega al menos un ingrediente');
+    const c = current(), i = favs.findIndex(f => f.k === c.k);
+    if (i >= 0) { favs.splice(i, 1); toast('Quitada de favoritas'); } else { c.img = snap(); favs.unshift(c); toast('Guardada en favoritas ♥'); }
+    write(FAV, favs); ui();
+  };
+  $('simFavs').onclick = e => {
+    const x = e.target.closest('[data-x]');
+    if (x) { favs.splice(+x.dataset.x, 1); write(FAV, favs); return ui(); }
+    const f = e.target.closest('.sim-fav'); if (!f) return;
+    const v = favs[+f.dataset.i]; L.forEach(l => l.t = 0); setGlass(v.g);
+    L = ING.filter(i => v.q[i.id]).map(i => ({ id: i.id, t: v.q[i.id] * ML, c: 0 })); ui();
+  };
+  $('simAdd').onclick = () => {
+    if (!total()) return toast('Agrega al menos un ingrediente');
+    const c = current(), it = { id: 'custom-' + hash(c.k), name: specOf(gk, c.q), price: c.price, img: snap() };
+    let ok = false;
+    try {
+      const h = document.createElement('div'); h.style.cssText = 'position:fixed;left:-9999px;top:0';
+      const a = document.createElement('article'); a.className = 'match-card'; a.dataset.uid = it.id; a.dataset.name = it.name;
+      const im = new Image(); im.src = it.img; const p = document.createElement('span'); p.dataset.mcPrice = it.price;
+      const b = document.createElement('button'); b.className = 'buy-button'; b.dataset.uid = it.id;
+      a.append(im, p, b); h.append(a); document.body.append(h); b.click(); h.remove();
+      ok = read(CART).some(x => String(x.id) === it.id);
+    } catch (e) {}
+    if (!ok) { const cart = read(CART), f = cart.find(x => x.id === it.id); f ? f.quantity++ : cart.push({ id: it.id, name: it.name, price: it.price, image: it.img, quantity: 1 }); write(CART, cart); }
+    toast('Tu creación se agregó al pedido');
+  };
+
+  let THREE_, R, scene, cam, cv, stage, glassG, liq, shadow, env, mats = {}, az = 0, drag = 0, lx = 0, D = 6, D2 = 6;
+  const V2 = a => a.map(p => new THREE.Vector2(p[0], p[1]));
+  function rAt(c, y) { for (let i = 0; i < c.length - 1; i++) { const a = c[i], b = c[i + 1]; if (b[1] - a[1] > 1e-6 && y >= a[1] - 1e-9 && y <= b[1] + 1e-9) return a[0] + (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]); } return c[c.length - 1][0]; }
+  function prep(g) {
+    const y0 = g.c[0][1], N = 160; g.ys = [y0]; g.vs = [0]; let v = 0;
+    for (let i = 1; i <= N; i++) { const y = y0 + (g.top - y0) * i / N, r = rAt(g.c, y); v += Math.PI * r * r * (g.top - y0) / N; g.ys.push(y); g.vs.push(v); }
+    g.k = g.cap / v; g.h = Math.max(...g.o.map(p => p[1])); g.r = Math.max(...g.o.map(p => p[0]));
+  }
+  function yAt(g, ml) {
+    const v = Math.min(ml / g.k, g.vs[g.vs.length - 1]); let i = 1;
+    while (i < g.vs.length - 1 && g.vs[i] < v) i++;
+    return g.ys[i - 1] + (g.ys[i] - g.ys[i - 1]) * ((v - g.vs[i - 1]) / ((g.vs[i] - g.vs[i - 1]) || 1));
+  }
+  function liqGeo(g, a, b, first) {
+    const ya = yAt(g, a), yb = yAt(g, b), n = Math.max(2, Math.ceil((yb - ya) / .05)), P = [];
+    if (first) P.push([0, ya]);
+    for (let i = 0; i <= n; i++) { const y = ya + (yb - ya) * i / n; P.push([rAt(g.c, y) * .985, y]); }
+    P.push([0, yb]); return new THREE.LatheGeometry(V2(P), 48);
+  }
+  function mkEnv() {
+    const c = document.createElement('canvas'); c.width = 1024; c.height = 512; const x = c.getContext('2d'), gr = x.createLinearGradient(0, 0, 0, 512);
+    gr.addColorStop(0, '#2b2f36'); gr.addColorStop(.5, '#0d0e10'); gr.addColorStop(1, '#050505'); x.fillStyle = gr; x.fillRect(0, 0, 1024, 512);
+    [[110, 80, 70, 300, '#fff'], [420, 60, 40, 320, '#ffe3b8'], [690, 100, 90, 280, '#fff'], [930, 80, 30, 300, '#cfe4ff'], [0, 36, 1024, 10, '#fff']].forEach(([a, b, w, h, col]) => { x.fillStyle = col; x.fillRect(a, b, w, h); });
+    const t = new THREE.CanvasTexture(c); t.mapping = THREE.EquirectangularReflectionMapping; t.encoding = THREE.sRGBEncoding;
+    const p = new THREE.PMREMGenerator(R), e = p.fromEquirectangular(t).texture; p.dispose(); return e;
+  }
+  function setGlass(k) {
+    gk = k; G = GL[k];
+    while (total() > G.cap) { const l = L[L.length - 1]; l.t -= ML; if (l.t <= 0) L.pop(); }
+    if (cv && glassG) {
+      glassG.children.slice().forEach(m => { glassG.remove(m); });
+      if (glassG.userData.geo) glassG.userData.geo.dispose();
+      const geo = new THREE.LatheGeometry(V2([...G.o, ...G.c.slice().reverse()]), 64); glassG.userData.geo = geo;
+      const back = new THREE.Mesh(geo, glassMat(THREE.BackSide)), front = new THREE.Mesh(geo, glassMat(THREE.FrontSide));
+      back.renderOrder = 0; front.renderOrder = 2; glassG.add(back, front);
+      shadow.scale.set(G.r * 3.2, G.r * 3.2, 1); fit(); rebuild();
+    }
+    ui();
+  }
+  const glassMat = side => new THREE.MeshPhysicalMaterial({ color: 0x06090c, roughness: .02, metalness: 0, reflectivity: .9, envMap: env, envMapIntensity: 2.4, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side });
+  function rebuild() {
+    liq.children.slice().forEach(m => { liq.remove(m); m.geometry.dispose(); });
+    let a = 0;
+    for (const l of L) { if (l.c < .3) continue; const m = new THREE.Mesh(liqGeo(G, a, a + l.c, a === 0), mats[l.id]); m.renderOrder = 1; liq.add(m); a += l.c; }
+  }
+  function fit() {
+    const w = cv.clientWidth || 300, h = cv.clientHeight || 400; R.setSize(w, h, false); cam.aspect = w / h;
+    const t = Math.tan(cam.fov * Math.PI / 360); D = Math.max(G.h * 1.25 / (2 * t), G.r * 2.6 / (2 * t * cam.aspect)); cam.updateProjectionMatrix();
+  }
+  function snap() {
+    if (!R) return '';
+    R.render(scene, cam); const c = document.createElement('canvas'); c.width = c.height = 120; const x = c.getContext('2d');
+    x.fillStyle = '#17110d'; x.fillRect(0, 0, 120, 120); const s = Math.min(120 / cv.width, 120 / cv.height);
+    x.drawImage(cv, (120 - cv.width * s) / 2, (120 - cv.height * s) / 2, cv.width * s, cv.height * s); return c.toDataURL('image/jpeg', .8);
+  }
+  function loop() {
+    requestAnimationFrame(loop); let dirty = false;
+    for (const l of L) { const d = l.t - l.c; if (Math.abs(d) > .05) { l.c += d * .1; dirty = true; } else if (l.c !== l.t) { l.c = l.t; dirty = true; } }
+    const n = L.length; L = L.filter(l => l.t > 0 || l.c > .05); if (L.length !== n) dirty = true;
+    if (dirty) rebuild();
+    if (!drag) az += .004;
+    D2 += (D - D2) * .08; const el = .24;
+    cam.position.set(Math.sin(az) * Math.cos(el) * D2, G.h * .5 + Math.sin(el) * D2, Math.cos(az) * Math.cos(el) * D2);
+    cam.lookAt(0, G.h * .5, 0); R.render(scene, cam);
+  }
+  function init() {
+    try {
+      cv = $('simCanvas'); stage = $('simStage');
+      R = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }); R.setPixelRatio(Math.min(devicePixelRatio, 2));
+      R.outputEncoding = THREE.sRGBEncoding; R.toneMapping = THREE.ACESFilmicToneMapping; R.toneMappingExposure = 1.15;
+      scene = new THREE.Scene(); cam = new THREE.PerspectiveCamera(32, 1, .1, 100); env = mkEnv(); scene.environment = env;
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x221a14, .7)); const dl = new THREE.DirectionalLight(0xffe2c0, 1.1); dl.position.set(3, 5, 4); scene.add(dl);
+      ING.forEach(i => mats[i.id] = new THREE.MeshPhysicalMaterial({ color: i.col, emissive: i.col, emissiveIntensity: .22, roughness: .08, transparent: true, opacity: i.op, envMap: env, envMapIntensity: .8, clearcoat: 1, clearcoatRoughness: .05 }));
+      const sc = document.createElement('canvas'); sc.width = sc.height = 128; const sx = sc.getContext('2d'), sg = sx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      sg.addColorStop(0, 'rgba(0,0,0,.9)'); sg.addColorStop(1, 'rgba(0,0,0,0)'); sx.fillStyle = sg; sx.fillRect(0, 0, 128, 128);
+      shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
+      shadow.rotation.x = -Math.PI / 2; shadow.position.y = .003; scene.add(shadow);
+      glassG = new THREE.Group(); liq = new THREE.Group(); scene.add(glassG, liq);
+      Object.values(GL).forEach(prep);
+      cv.addEventListener('pointerdown', e => { drag = 1; lx = e.clientX; cv.setPointerCapture(e.pointerId); });
+      cv.addEventListener('pointermove', e => { if (drag) { az -= (e.clientX - lx) * .012; lx = e.clientX; } });
+      ['pointerup', 'pointercancel'].forEach(t => cv.addEventListener(t, () => drag = 0));
+      new ResizeObserver(fit).observe(stage); setGlass(gk); D2 = D; loop();
+    } catch (e) { $('simStage').innerHTML = '<p style="padding:20px;color:#fff;font:13px system-ui">Tu navegador no pudo abrir el visor 3D. Prueba con Chrome o Safari actualizado.</p>'; }
+  }
+  Object.values(GL).forEach(() => {}); ui();
+  if (window.THREE) init(); else { const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'; s.onload = init; document.head.appendChild(s); }
+})();
+</script><!-- /twig-include:sections/index.simulation.html -->
         <!-- twig-include:sections/index.contact.html --><!-- Explain: Contact form and booking information section. -->
 <section id="contact" class="section-pad contact-section px-5 sm:px-8">
     <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1fr] lg:items-center">
